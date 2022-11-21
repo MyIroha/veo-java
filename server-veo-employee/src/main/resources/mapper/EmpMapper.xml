@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "org.chisa.employee.mapper.EmpMapper">
+    <resultMap type="org.chisa.employee.domain.Employee" id="emp">
+        <id property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="sex" column="sex"/>
+        <result property="phone" column="phone"/>
+        <result property="password" column="password"/>
+        <result property="createTime" column="create_time"/>
+        <result property="endTime" column="emd_time"/>
+        <result property="stockId" column="stock_id"/>
+    </resultMap>
+
+    <!--使用phone和密码登录-->
+    <select id="trueLoginByPhoneAndPwd" resultMap="emp">
+        select employee_id,employee_name,phone from employee where phone = #{phone} and `password` = #{pwd};
+    </select>
+    <select id="trueLoginByPhone" resultMap="emp">
+        select employee_id,employee_name,phone,stock_id from employee where phone = #{phone};
+    </select>
+</mapper>

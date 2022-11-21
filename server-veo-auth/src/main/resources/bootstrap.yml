@@ -1,0 +1,36 @@
+
+spring:
+  application:
+    name: server-veo-auth
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://123.60.10.16:3306/hmdp?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.0.102:8848
+      config:
+        server-addr: 192.168.0.102:8848
+        file-extension: yaml #指定yaml格式的配置
+
+  redis:
+    host: 123.60.10.16
+    port: 6379
+    password: 123456
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 1
+        time-between-eviction-runs: 10s
+  jackson:
+    default-property-inclusion: non_null # JSON处理时忽略非空字段
+    date-format: yyyy-MM-dd HH:mm:ss
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "org.chisa.asset.mapper.AssetMapper">
+
+    <resultMap type="org.chisa.asset.domain.Asset" id="asset">
+        <id property="assetId" column="asset_id"/>
+        <result property="iotNumber" column="iot_number"/>
+        <result property="frameNumber" column="frame_number"/>
+        <result property="stockId" column="stock_id"/>
+        <result property="woId" column="wo_id"/>
+        <association  property="vechicleType"  resultMap="vechicleType"/>
+        <association  property="iotStatus"  resultMap="iotStatus"/>
+        <association  property="frameStatus"  resultMap="frameStatus"/>
+    </resultMap>
+
+    <resultMap type="org.chisa.asset.domain.VechicleType" id="vechicleType">
+        <id property="vechicleId" column="vechicle_id"/>
+        <result property="vechicleName" column="vechicle_type_name"/>
+        <result property="vechicleIcon" column="vechicle_icon"/>
+    </resultMap>
+
+    <resultMap type="org.chisa.asset.domain.StatusAll" id="iotStatus">
+        <id property="statusId" column="status_id"/>
+        <result property="statusType" column="status_type"/>
+        <result property="statusName" column="status_name"/>
+    </resultMap>
+    <resultMap type="org.chisa.asset.domain.StatusAll" id="frameStatus">
+        <id property="statusId" column="frame_id"/>
+        <result property="statusType" column="frame_type"/>
+        <result property="statusName" column="frame_status"/>
+    </resultMap>
+
+    <select id="selectAssets" parameterType="org.chisa.asset.domain.Asset"  resultMap="asset">
+        select
+            a.asset_id,a.iot_number,a.frame_number,a.wo_id,a.stock_id,
+            iot.status_id,iot.status_type,iot.status_name,
+            frame.status_id as frame_id,frame.status_type as frame_type,frame.status_name as frame_status,
+            v.vechicle_id,v.vechicle_type_name,v.vechicle_icon
+        from asset a
+            join all_status iot on a.iot_status_id = iot.status_id
+            join all_status frame on a.frame_status_id = frame.status_id
+            join vechicle v on a.vechicle_id = v.vechicle_id
+        <where>
+            <if test="asset.stockId != null and asset.stockId != ''">
+                a.stock_id = #{asset.stockId}
+            </if>
+            <if test="asset.vechicleType != null  and asset.vechicleType.vechicleId != 0">
+                and v.vechicle_id = #{asset.vechicleType.vechicleId}
+            </if>
+            <if test="asset.iotStatus !=null  and asset.iotStatus.statusId != null and asset.iotStatus.statusId != 0 ">
+                and a.iot_status_id = #{asset.iotStatus.statusId}
+            </if>
+            <if test="asset.frameStatus !=null and asset.frameStatus.statusId != null and asset.frameStatus.statusId != 0">
+                and frame.status_id = #{asset.frameStatus.statusId}
+            </if>
+            <if test="asset.iotNumber != null and asset.iotNumber != '' and asset.frameNumber != null and asset.frameNumber != ''">
+               and (a.iot_number like CONCAT('%',#{asset.frameNumber},'%') or a.frame_number like CONCAT('%',#{asset.frameNumber},'%'))
+            </if>
+        </where>
+         order by a.asset_id desc
+         limit ${(asset.pageDTO.page - 1) * asset.pageDTO.count},#{asset.pageDTO.count}
+    </select>
+
+    <update id="modifyAssets" parameterType="org.chisa.asset.domain.Asset">
+        update asset set
+        <if test="asset!=null and asset.frameNumber != null and asset.frameNumber != ''">
+            frame_number = #{asset.frameNumber}
+        </if>
+        where  stock_id = #{asset.stockId} and asset_id = #{asset.assetId}
+    </update>
+
+    <select id="selectAsset" parameterType="integer"  resultMap="asset">
+        select
+        a.asset_id,a.iot_number,a.frame_number,a.wo_id,a.stock_id,
+        iot.status_id,iot.status_type,iot.status_name,
+        frame.status_id as frame_id,frame.status_type as frame_type,frame.status_name as frame_status,
+        v.vechicle_id,v.vechicle_type_name,v.vechicle_icon
+        from asset a
+        join all_status iot on a.iot_status_id = iot.status_id
+        join all_status frame on a.frame_status_id = frame.status_id
+        join vechicle v on a.vechicle_id = v.vechicle_id
+        <where>
+            <if test="stockId != null and stockId != 0">
+                a.stock_id = #{stockId}
+            </if>
+            <if test="assetId != null  and assetId != 0">
+                and a.asset_id = #{assetId}
+            </if>
+
+        </where>
+    </select>
+</mapper>
