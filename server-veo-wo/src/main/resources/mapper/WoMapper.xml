@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "org.chisa.wo.mapper.WoMapper">
+
+
+    <resultMap type="org.chisa.wo.domain.Wo" id="wo">
+        <id property="woId" column="wo_id"/>
+        <result property="title" column="title"/>
+        <result property="woScores" column="wo_scores"/>
+        <result property="createTime" column="create_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="consumeTime" column="consume_time"/>
+        <result property="woType" column="wo_type"/>
+        <result property="stockId" column="stock_id"/>
+        <association property="woStatusId" resultMap="status"></association>
+        <association property="asset" resultMap="asset"></association>
+    </resultMap>
+    <resultMap type="org.chisa.commons.global_dto.AssetDTO" id="asset">
+        <id property="assetId" column="asset_id"/>
+    </resultMap>
+    <resultMap type="org.chisa.commons.global_dto.StatusAllDTO" id="status">
+        <id property="statusId" column="wo_status_id"/>
+    </resultMap>
+
+    <select id="getWoList"  resultMap="wo">
+        SELECT wo_id,title,asset_id,wo_scores,wo_status_id,create_time,end_time,consume_time,wo_type,stock_id
+        <choose>
+            <when test="wo==null or wo.woStatusId == null or wo.woStatusId.statusId != 0">
+                FROM (
+                SELECT wo_id,title,asset_id,wo_scores,wo_status_id,create_time,end_time,consume_time,wo_type,stock_id from wo where wo_status_id = 8  and stock_id = #{wo.stockId}
+
+                union
+                SELECT wo_id,title,asset_id,wo_scores,wo_status_id,create_time,end_time,consume_time,wo_type,stock_id from wo where wo_status_id != 6 and stock_id = #{wo.stockId}
+                ) as wo1
+
+            </when>
+            <otherwise>
+                SELECT wo_id,title,asset_id,wo_scores,wo_status_id,create_time,end_time,consume_time,wo_type,stock_id from wo where wo_status_id = #{wo.woStatusId.statusId}
+            </otherwise>
+        </choose>
+        <where>
+            <if test="asseIds!=null and asseIds.size()>0">
+                and asset_id in(
+                    <foreach item="assetid" index="index" collection="asseIds" separator=",">
+                        #{assetid}
+                    </foreach>
+                )
+            </if>
+        </where>
+    </select>
+</mapper>

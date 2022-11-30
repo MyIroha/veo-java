@@ -136,6 +136,7 @@
         <module>server-veo-getway</module>
         <module>server-veo-auth</module>
         <module>server-veo-asset</module>
+        <module>server-veo-wo</module>
     </modules>
 
     <build>

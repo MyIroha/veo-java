@@ -4,6 +4,8 @@ package org.chisa.asset.domain;
 import lombok.Data;
 import lombok.ToString;
 import org.chisa.commons.global_dto.PageDTO;
+import org.chisa.commons.global_dto.StatusAllDTO;
+import org.chisa.commons.global_dto.VechicleTypeDTO;
 
 @Data
 @ToString
@@ -23,7 +25,7 @@ public class Asset {
     /**
      * 车架类型
      */
-    private VechicleType vechicleType;
+    private VechicleTypeDTO vechicleType;
     /**
      * 所在市场
      */
@@ -35,11 +37,11 @@ public class Asset {
     /**
      * iot状态
      */
-    private StatusAll iotStatus;
+    private StatusAllDTO iotStatus;
     /**
      * frame状态
      */
-    private StatusAll frameStatus;
+    private StatusAllDTO frameStatus;
 
     private PageDTO pageDTO;
 }

@@ -1,4 +1,4 @@
-package org.chisa.asset.domain;
+package org.chisa.commons.global_dto;
 
 import lombok.Data;
 import lombok.ToString;
@@ -14,7 +14,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class StatusAll {
+public class StatusAllDTO {
     private Integer statusId;
 
     private String statusType;

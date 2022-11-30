@@ -33,11 +33,19 @@ spring:
             - RewritePath=/api/(?<segment>.*),/veo-emp/$\{segment}
             - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 
+        - id: wo-router
+          uri:  lb://server-veo-wo
+          predicates:
+            - Path=/wo/**
+          filters:
+            - RewritePath=/wo/(?<segment>.*),/veo-wo/$\{segment}
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
     nacos:
       discovery:
-        server-addr: 192.168.0.102:8848
+        server-addr: 127.0.0.1:8848
       config:
-        server-addr: 192.168.0.102:8848
+        server-addr: 127.0.0.1:8848
 
 
 

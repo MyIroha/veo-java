@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "org.chisa.asset.mapper.AssetGetAllMapper">
+
+    <resultMap type="org.chisa.commons.global_dto.AssetDTO" id="asset_dto">
+        <id property="assetId" column="asset_id"/>
+        <result property="iotNumber" column="iot_number"/>
+        <result property="frameNumber" column="frame_number"/>
+        <association  property="vechicleType"  resultMap="vechicleType"/>
+    </resultMap>
+
+    <resultMap type="org.chisa.commons.global_dto.VechicleTypeDTO" id="vechicleType">
+        <id property="vechicleId" column="vechicle_id"/>
+        <result property="vechicleName" column="vechicle_type_name"/>
+        <result property="vechicleIcon" column="vechicle_icon"/>
+    </resultMap>
+
+    <resultMap type="org.chisa.commons.global_dto.StatusAllDTO" id="woStatus">
+        <id property="statusId" column="status_id"/>
+        <result property="statusType" column="status_type"/>
+        <result property="statusName" column="status_name"/>
+    </resultMap>
+
+
+    <select id="getAssetonWO"  resultMap="asset_dto">
+        select
+        a.asset_id,a.iot_number,a.frame_number,
+        v.vechicle_id,v.vechicle_type_name,v.vechicle_icon
+        from asset a
+        join vechicle v on a.vechicle_id = v.vechicle_id
+        where a.stock_id = #{stockId} and a.wo_id > 0
+    </select>
+    <select id="getWoStatus" resultMap="woStatus">
+        select status_id,status_type,status_name from all_status
+        where status_type = "wo"
+    </select>
+
+</mapper>

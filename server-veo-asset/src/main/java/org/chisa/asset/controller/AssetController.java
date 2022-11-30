@@ -36,7 +36,6 @@ public class AssetController {
 
     @GetMapping("/Info/{id}")
     public ResultVo assetInfo(@PathVariable("id")Integer id,HttpServletRequest request){
-        System.err.println(id);
         return assetService.selectAsset(id,request);
     }
 }

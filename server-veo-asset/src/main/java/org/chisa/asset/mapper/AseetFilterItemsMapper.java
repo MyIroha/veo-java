@@ -1,15 +1,15 @@
 package org.chisa.asset.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.chisa.asset.domain.StatusAll;
-import org.chisa.asset.domain.VechicleType;
+import org.chisa.commons.global_dto.StatusAllDTO;
+import org.chisa.commons.global_dto.VechicleTypeDTO;
 
 import java.util.List;
 
 @Mapper
 public interface AseetFilterItemsMapper {
 
-    List<StatusAll> getStatus();
+    List<StatusAllDTO> getStatus();
 
-    List<VechicleType> getVechileTypes();
+    List<VechicleTypeDTO> getVechileTypes();
 }

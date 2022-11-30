@@ -29,7 +29,6 @@ public class AssetServiceImpl implements AssetService {
         Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(token);
         EmpDTO empDTO = BeanUtil.fillBeanWithMap(entries, new EmpDTO(), false);
         asset.setStockId(empDTO.getStockId());
-        System.err.println(asset.getPageDTO().toString());
         if(asset.getPageDTO()==null){
             asset.setPageDTO(new PageDTO());
         }
